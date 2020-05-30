@@ -1,0 +1,41 @@
+name: Hugo Build and Deploy
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        token: ${{ secrets.AUTHENTICATED_PAT }}
+        submodules: true
+
+    - name: Fix detached head on public submodule
+      run: |
+        cd public/
+        git checkout master
+
+    - name: Configure Git name
+      run: git config --global user.name "Daniel Soskel"
+
+    - name: Configure Git email
+      run: git config --global user.email "unstablereality@gmail.com" foo
+
+    - name: Download Hugo
+      run: wget https://github.com/gohugoio/hugo/releases/download/v0.71.0/hugo_0.71.0_Linux-64bit.tar.gz
+
+    - name: Extract Hugo
+      run: tar -xvf hugo_0.71.0_Linux-64bit.tar.gz
+
+    - name: Run Hugo build
+      run: ./hugo
+
+    - name: Push Hugo build in public submodule
+      run: |
+        cd public/
+        git add .
+        git commit -am "build for ${{ github.sha }}" || echo "Website build is identical, nothing to commit"
+        git push -u origin gh-pages
