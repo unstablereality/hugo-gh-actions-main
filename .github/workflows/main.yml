@@ -38,4 +38,4 @@ jobs:
         cd public/
         git add .
         git commit -am "build for ${{ github.sha }}" || echo "Website build is identical, nothing to commit"
-        git push -u origin master
+        git push -u origin gh-pages
