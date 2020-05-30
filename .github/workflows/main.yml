@@ -16,7 +16,7 @@ jobs:
     - name: Fix detached head on public submodule
       run: |
         cd public/
-        git checkout master
+        git checkout gh-pages
 
     - name: Configure Git name
       run: git config --global user.name "Daniel Soskel"
